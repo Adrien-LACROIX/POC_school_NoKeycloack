@@ -165,11 +165,14 @@ func tryLaterHandler(w http.ResponseWriter, r *http.Request) {
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session",
-		Value:   "",
-		Path:    "/",
-		MaxAge:  -1,
-		Expires: time.Unix(0, 0),
+		Name:     "session",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		Expires:  time.Unix(0, 0),
+		Secure:   true, // <-- Ajouté pour SonarQube
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
 	})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

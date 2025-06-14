@@ -31,16 +31,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
-	//    id SERIAL PRIMARY KEY,
-	//    email TEXT UNIQUE NOT NULL,
-	//    username TEXT UNIQUE NOT NULL,
-	//    password TEXT NOT NULL
-	//);`)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -48,7 +38,7 @@ func main() {
 	http.HandleFunc("/signup", signupHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/welcome", welcomeHandler)
-	http.HandleFunc("/try-later", tryLaterHandler)
+	http.HandleFunc("/trylater", tryLaterHandler)
 	http.HandleFunc("/logout", logoutHandler)
 
 	log.Println("Server running on :8080")

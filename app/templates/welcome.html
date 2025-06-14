@@ -1,5 +1,14 @@
-{{ define "title" }}Bienvenue{{ end }}
-{{ define "content" }}
-  <h2>Welcome {{ .Username }}!</h2>
-  <p><a href="/">Déconnexion</a></p>
-{{ end }}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bienvenue</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome {{ .Username }}!</h2>
+    <p><a href="/logout">Déconnexion</a></p>
+  </div>
+</body>
+</html>

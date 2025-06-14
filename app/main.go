@@ -19,7 +19,7 @@ var (
 
 func main() {
 	var err error
-	connStr := "host=localhost port=5432 user=myuser password=mypass dbname=myappdb sslmode=disable"
+	connStr := "host=localhost port=5432 user=postgres password=mypwd dbname=myappdb sslmode=disable"
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
@@ -31,15 +31,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    );`)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
+	//    id SERIAL PRIMARY KEY,
+	//    email TEXT UNIQUE NOT NULL,
+	//    username TEXT UNIQUE NOT NULL,
+	//    password TEXT NOT NULL
+	//);`)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
 
@@ -49,6 +49,7 @@ func main() {
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/welcome", welcomeHandler)
 	http.HandleFunc("/try-later", tryLaterHandler)
+	http.HandleFunc("/logout", logoutHandler)
 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -119,7 +120,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	ip := r.RemoteAddr
 
 	if tryCount[ip] >= 3 {
-		http.Redirect(w, r, "/try-later", http.StatusSeeOther)
+		http.Redirect(w, r, "/trylater", http.StatusSeeOther)
 		return
 	}
 
@@ -160,4 +161,15 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 
 func tryLaterHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "try_later.html", nil)
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session",
+		Value:   "",
+		Path:    "/",
+		MaxAge:  -1,
+		Expires: time.Unix(0, 0),
+	})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

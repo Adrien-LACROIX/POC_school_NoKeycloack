@@ -7,7 +7,7 @@ on:
 
 jobs:
   run-powershell-tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
@@ -15,4 +15,4 @@ jobs:
 
       - name: ✅ Exécuter script PowerShell
         shell: pwsh
-        run: ../../app/test_script.ps1
+        run: ../../app/tests.sh

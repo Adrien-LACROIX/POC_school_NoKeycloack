@@ -36,7 +36,7 @@ jobs:
 
     # ✅ 6. SonarQube Scan
     - name: Cache Sonar packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
@@ -83,7 +83,7 @@ jobs:
 
     # ✅ 9. Upload the ZAP Report
     - name: Upload ZAP Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ZAP Security Report
         path: zap-report.html

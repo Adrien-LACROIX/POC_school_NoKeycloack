@@ -1,18 +1,20 @@
-name: Test Unitaire PowerShell
+name: Test Unitaires
 
 on:
   push:
     branches:
-      - main   # ou la branche de ton choix
+      - main
 
 jobs:
-  run-powershell-tests:
+  run-bash-tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: ✅ Exécuter script PowerShell
-        shell: pwsh
-        run: ../../app/tests.sh
+      - name: 🔐 Donner les droits d'exécution au script
+        run: chmod +x ./ton_script.sh
+
+      - name: ✅ Exécuter le script de tests
+        run: ./ton_script.sh

@@ -51,6 +51,7 @@ docker compose down -v
 echo "🚀 Reconstruction et démarrage des conteneurs..."
 docker compose up --build -d
 
+cd app
 echo "▶️ Lancement de l'application..."
 go run ./main.go &
 
@@ -59,4 +60,5 @@ sleep 15
 
 echo "🧪 Lancement des tests unitaires..."
 go test -v
+cd ..
 

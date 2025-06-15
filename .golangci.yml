@@ -1,20 +1,19 @@
 run:
   timeout: 3m
-  tests: true  # Active aussi l’analyse des fichiers *_test.go
+  tests: true  # Analyse également les fichiers *_test.go
 
 linters:
   enable:
-    - govet         # Vérifie erreurs logiques Go
-    - staticcheck   # Recommandations avancées
-    - gosimple      # Simplifications possibles
-    - gofmt         # Formatage (et simplification)
-    - goimports     # Nettoyage des imports inutiles
-    - errcheck      # Vérifie que toutes les erreurs sont gérées
-    - ineffassign   # Affectations inutilisées
-    - deadcode      # Code mort
-    - unused        # Variables/fonctions inutilisées
-    - gosec         # Analyse de vulnérabilités de sécurité 🔐
-    - revive        # Style / lisibilité avancée
+    - govet
+    - staticcheck
+    - gosimple
+    - gofmt
+    - goimports
+    - errcheck
+    - ineffassign
+    - unused
+    - gosec
+    - revive
 
 linters-settings:
   gofmt:
@@ -29,15 +28,14 @@ linters-settings:
       - name: dot-imports
       - name: var-naming
       - name: function-length
-        arguments: [80] # Limite lignes/fonction
+        arguments: [80]
 
   gosec:
-    # Ignore quelques règles communes peu pertinentes pour du web simple
     excludes:
-      - G104 # Ignorer erreurs retournées par 'go run' ou exec.Command
+      - G104
 
 issues:
-  max-issues-per-linter: 0  # 0 = pas de limite
+  max-issues-per-linter: 0
   max-same-issues: 0
   exclude-use-default: false
   exclude-rules:

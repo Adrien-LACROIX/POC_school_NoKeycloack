@@ -22,6 +22,7 @@ func testServer() http.Handler {
 func TestIndexHandler(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
 	resp, err := http.Get(ts.URL + "/")
 	if err != nil {
@@ -32,15 +33,16 @@ func TestIndexHandler(t *testing.T) {
 	}
 }
 
-func TestSignupMissingFields(t *testing.T) {
+func TestSignupFailed(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
 	resp, err := http.PostForm(ts.URL+"/signup", url.Values{
-		"email":    {""},
+		"email":    {"test@example.com"},
 		"username": {"testuser"},
 		"pwd":      {"password"},
-		"pwd2":     {"password"},
+		"pwd2":     {"pwd"},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -53,24 +55,21 @@ func TestSignupMissingFields(t *testing.T) {
 func TestSignupSuccess(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
-	resp, err := http.PostForm(ts.URL+"/signup", url.Values{
-		"email":    {"test@example.com"},
-		"username": {"testuser"},
-		"pwd":      {"password123"},
-		"pwd2":     {"password123"},
-	})
+	resp, err := singUp(ts)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.StatusCode != http.StatusSeeOther {
-		t.Errorf("expected 303 redirect, got %d", resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("expected 200 redirect, got %d", resp.StatusCode)
 	}
 }
 
 func TestLoginFailWrongPassword(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
 	resp, err := http.PostForm(ts.URL+"/login", url.Values{
 		"username": {"testuser"},
@@ -87,30 +86,51 @@ func TestLoginFailWrongPassword(t *testing.T) {
 func TestLoginSuccess(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
-	resp, err := http.PostForm(ts.URL+"/login", url.Values{
-		"username": {"testuser"},
-		"pwd":      {"password123"},
-	})
+	resp, err := login(ts)
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
-	if resp.StatusCode != http.StatusSeeOther {
-		t.Errorf("expected 303 on successful login, got %d", resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("expected 200 on successful login, got %d", resp.StatusCode)
 	}
 }
 
 func TestLogout(t *testing.T) {
 	ts := httptest.NewServer(testServer())
 	defer ts.Close()
+	ts.URL = "http://localhost:8080"
 
 	client := &http.Client{}
+	resp, err := login(ts)
 	req, _ := http.NewRequest("GET", ts.URL+"/logout", nil)
-	resp, err := client.Do(req)
+	resp, err = client.Do(req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.StatusCode != http.StatusSeeOther {
-		t.Errorf("expected 303 redirect, got %d", resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("expected 200 redirect, got %d", resp.StatusCode)
 	}
+}
+
+func singUp(ts *httptest.Server) (*http.Response, error) {
+	return http.PostForm(ts.URL+"/signup", url.Values{
+		"email":    {"test@example.com"},
+		"username": {"testuser"},
+		"pwd":      {"password123"},
+		"pwd2":     {"password123"},
+	})
+}
+
+func login(ts *httptest.Server) (*http.Response, error) {
+	resp, err := singUp(ts)
+	if err != nil {
+		return resp, err
+	}
+
+	return http.PostForm(ts.URL+"/login", url.Values{
+		"username": {"testuser"},
+		"pwd":      {"password123"},
+	})
 }

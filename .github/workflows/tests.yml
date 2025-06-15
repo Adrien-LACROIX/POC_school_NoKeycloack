@@ -1,0 +1,18 @@
+name: Test Unitaire PowerShell
+
+on:
+  push:
+    branches:
+      - main   # ou la branche de ton choix
+
+jobs:
+  run-powershell-tests:
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ✅ Exécuter script PowerShell
+        shell: pwsh
+        run: ../../app/test_script.ps1

@@ -1,0 +1,34 @@
+name: Exécution test.sh depuis app/
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-bash-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 📁 Lister tous les fichiers pour debug
+        run: |
+          echo "Contenu du dépôt :"
+          ls -R
+
+      - name: ❓ Vérifier si le script existe
+        run: |
+          if [ ! -f ./app/tests.sh ]; then
+            echo "❌ Le fichier ./app/tests.sh est introuvable !"
+            exit 1
+          else
+            echo "✅ Fichier trouvé !"
+          fi
+
+      - name: 🔐 Rendre exécutable
+        run: chmod +x ./app/tests.sh
+
+      - name: ▶️ Exécuter le script
+        run: sudo ./app/tests.sh

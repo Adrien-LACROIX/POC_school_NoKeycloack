@@ -27,11 +27,8 @@ jobs:
         echo "$HOME/go/bin" >> $GITHUB_PATH
 
     # ✅ 4. Run golangci-lint
-    - name: move to the good directory
-      run: cd app
-
     - name: Lint code with golangci-lint
-      run: golangci-lint run --timeout=3m
+      run: golangci-lint run ./app/ --timeout=3m
 
     # ✅ 5. Build the Go project
     - name: Build Go app

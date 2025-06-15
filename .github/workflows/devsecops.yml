@@ -32,14 +32,14 @@ jobs:
         key: ${{ runner.os }}-sonar
 
     - name: Run SonarQube Analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        sonar-scanner \
-          -Dsonar.projectKey=ton_projet \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+      uses: docker://sonarsource/sonar-scanner-cli:latest
+      with:
+        args: >
+          -Dsonar.projectKey=ton_projet
+          -Dsonar.sources=.
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
 
     # ✅ 5. Start the Go web server
     - name: Start Go Web Server

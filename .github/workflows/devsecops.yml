@@ -28,7 +28,7 @@ jobs:
 
     # ✅ 4. Run golangci-lint
     - name: Lint code with golangci-lint
-      run: cd app | golangci-lint run ./app/...
+      run: cd app | golangci-lint run
 
     # ✅ 5. Build the Go project
     - name: Build Go app

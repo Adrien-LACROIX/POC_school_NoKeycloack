@@ -3,6 +3,8 @@ name: DevSecOps CI (Go + HTML)
 on:
   push:
     branches: [main]
+    paths: 
+      - 'app/**'
   workflow_dispatch:
 
 jobs:
@@ -26,12 +28,9 @@ jobs:
         curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $HOME/go/bin v1.55.2
         echo "$HOME/go/bin" >> $GITHUB_PATH
 
-    - name: path
-      run: echo $PATH
-
     # ✅ 4. Run golangci-lint
     - name: Lint code with golangci-lint
-      run: golangci-lint run ./app/... --timeout=3m
+      run: golangci-lint run ./app/...
 
     # ✅ 5. Build the Go project
     - name: Build Go app

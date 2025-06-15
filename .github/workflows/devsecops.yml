@@ -3,8 +3,6 @@ name: DevSecOps CI (Go + HTML)
 on:
   push:
     branches: [main]
-    paths: 
-      - 'app/**'
   workflow_dispatch:
 
 jobs:
@@ -30,7 +28,7 @@ jobs:
 
     # ✅ 4. Run golangci-lint
     - name: Lint code with golangci-lint
-      run: golangci-lint run ./app/...
+      run: cd app | golangci-lint run ./app/...
 
     # ✅ 5. Build the Go project
     - name: Build Go app

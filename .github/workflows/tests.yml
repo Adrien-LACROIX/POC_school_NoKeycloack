@@ -1,4 +1,4 @@
-name: Test Unitaires
+name: Exécution test.sh depuis app/
 
 on:
   push:
@@ -6,18 +6,29 @@ on:
       - main
 
 jobs:
-  run-bash-tests:
+  run-bash-script:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout repo
         uses: actions/checkout@v4
 
-      - name: verifier le path
-        run: echo $PATH
+      - name: 📁 Lister tous les fichiers pour debug
+        run: |
+          echo "Contenu du dépôt :"
+          ls -R
 
-      - name: 🔐 Donner les droits d'exécution au script
+      - name: ❓ Vérifier si le script existe
+        run: |
+          if [ ! -f ./app/test.sh ]; then
+            echo "❌ Le fichier ./app/test.sh est introuvable !"
+            exit 1
+          else
+            echo "✅ Fichier trouvé !"
+          fi
+
+      - name: 🔐 Rendre exécutable
         run: chmod +x ./app/test.sh
 
-      - name: ✅ Exécuter le script de tests
+      - name: ▶️ Exécuter le script
         run: ./app/test.sh

@@ -46,10 +46,10 @@ usermod -aG docker "$USER"
 
 
 echo "🛑 Arrêt et suppression des conteneurs + volumes..."
-docker-compose down -v
+docker compose down -v
 
 echo "🚀 Reconstruction et démarrage des conteneurs..."
-docker-compose up --build -d
+docker compose up --build -d
 
 echo "▶️ Lancement de l'application..."
 go run ./main.go &

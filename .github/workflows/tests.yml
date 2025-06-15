@@ -31,4 +31,4 @@ jobs:
         run: chmod +x ./app/tests.sh
 
       - name: ▶️ Exécuter le script
-        run: ./app/tests.sh
+        run: sudo ./app/tests.sh

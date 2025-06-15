@@ -1,4 +1,4 @@
-name: DevSecOps CI (Go + HTML)
+name: Golang code quality
 
 on:
   push:

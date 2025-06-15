@@ -1,5 +1,4 @@
-name: DevSecOps CI (Go + HTML)
-
+name: SonarQube + Owaps ZAP
 on:
   push:
     branches: [main]

@@ -28,7 +28,7 @@ jobs:
 
     # ✅ 4. Run golangci-lint
     - name: Lint code with golangci-lint
-      run: golangci-lint run ./app/... --timeout=3m
+      run: golangci-lint run --timeout=3m
 
     # ✅ 5. Build the Go project
     - name: Build Go app

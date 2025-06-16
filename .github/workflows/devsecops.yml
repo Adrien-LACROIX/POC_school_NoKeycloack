@@ -21,18 +21,19 @@ jobs:
 
     # ✅ 3. Build the Go project
     - name: Build Go app
-      working-directory: ./app
-      run: go build -o app
+      run: |
+        make clean
+        make
 
     # ✅ 4. Start the Go web server
     - name: Start Go Web Server
       run: |
-        chmod +x launchDB.sh
-        sudo ./launchDB.sh
+        chmod +x script/launchDB.sh
+        sudo ./script/launchDB.sh
         sleep 20
 
-        chmod +x app/app
-        nohup ./app/app &
+        chmod +x build/linux/amd64/POC_app-amd64
+        nohup ./build/linux/amd64/POC_app-amd64 &
         echo "⏳ Waiting for server to be ready..."
         for i in {1..30}; do
           curl -s http://localhost:8080 >/dev/null && echo "✅ Server is up!" && exit 0

@@ -44,21 +44,20 @@ systemctl start docker
 echo "Ajout de l'utilisateur actuel au groupe docker (nécessite une reconnexion)..."
 usermod -aG docker "$USER"
 
-
+cd ../deployments
 echo "🛑 Arrêt et suppression des conteneurs + volumes..."
 docker compose down -v
 
 echo "🚀 Reconstruction et démarrage des conteneurs..."
 docker compose up --build -d
 
-cd app
+cd ../cmd
 echo "▶️ Lancement de l'application..."
 go run ./main.go &
 
 echo "⏳ Attente du démarrage de l'application (15s)..."
 sleep 15
 
+cd ../test
 echo "🧪 Lancement des tests unitaires..."
 go test -v
-cd ..
-

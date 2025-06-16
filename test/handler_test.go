@@ -5,17 +5,19 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	h "pocnokc/internal/handler"
 )
 
 // testServer crée un serveur de test à partir de notre handler principal
 func testServer() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", indexHandler)
-	mux.HandleFunc("/signup", signupHandler)
-	mux.HandleFunc("/login", loginHandler)
-	mux.HandleFunc("/logout", logoutHandler)
-	mux.HandleFunc("/welcome", welcomeHandler)
-	mux.HandleFunc("/trylater", tryLaterHandler)
+	mux.HandleFunc("/", h.IndexHandler)
+	mux.HandleFunc("/signup", h.SignupHandler)
+	mux.HandleFunc("/login", h.LoginHandler)
+	mux.HandleFunc("/logout", h.LogoutHandler)
+	mux.HandleFunc("/welcome", h.WelcomeHandler)
+	mux.HandleFunc("/trylater", h.TryLaterHandler)
 	return mux
 }
 

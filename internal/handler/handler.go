@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"database/sql"
@@ -17,39 +17,27 @@ var (
 	tryCount = make(map[string]int)
 )
 
-func main() {
-	var err error
-	connStr := "host=localhost port=5432 user=postgres password=mypwd dbname=myappdb sslmode=disable"
-	db, err = sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+func Handler(dtb *sql.DB) {
+	db = dtb
+	tmpl = template.Must(template.ParseGlob("../web/templates/*.html"))
 
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	tmpl = template.Must(template.ParseGlob("templates/*.html"))
-
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/signup", signupHandler)
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/welcome", welcomeHandler)
-	http.HandleFunc("/trylater", tryLaterHandler)
-	http.HandleFunc("/logout", logoutHandler)
+	http.Handle("/static/", http.StripPrefix("../web/static/", http.FileServer(http.Dir("static"))))
+	http.HandleFunc("/", IndexHandler)
+	http.HandleFunc("/signup", SignupHandler)
+	http.HandleFunc("/login", LoginHandler)
+	http.HandleFunc("/welcome", WelcomeHandler)
+	http.HandleFunc("/trylater", TryLaterHandler)
+	http.HandleFunc("/logout", LogoutHandler)
 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "index.html", nil)
 }
 
-func signupHandler(w http.ResponseWriter, r *http.Request) {
+func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		tmpl.ExecuteTemplate(w, "signup.html", nil)
 		return
@@ -99,7 +87,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 		return
@@ -140,7 +128,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
-func welcomeHandler(w http.ResponseWriter, r *http.Request) {
+func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -149,11 +137,11 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "welcome.html", map[string]string{"Username": cookie.Value})
 }
 
-func tryLaterHandler(w http.ResponseWriter, r *http.Request) {
+func TryLaterHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "try_later.html", nil)
 }
 
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",
 		Value:    "",

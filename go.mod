@@ -1,4 +1,4 @@
-module myapp
+module pocnokc
 
 go 1.23.5
 

@@ -1,3 +1,4 @@
+// handler package allowed the navigation on the website
 package handler
 
 import (
@@ -19,6 +20,7 @@ var (
 	tryCount = make(map[string]int)
 )
 
+// Handler connects to the database, defines the server handlers and listens for events on localhost:8080
 func Handler() {
 	var err error
 
@@ -56,10 +58,16 @@ func Handler() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+// Default handler
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "index.html", nil)
 }
 
+// Checks that no account exists with the same email address or username.
+// Also checks that the passwords entered are identical.
+// Saves the new user in the database by hashing the password.
+//
+// Redirects to the login page.
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		tmpl.ExecuteTemplate(w, "signup.html", nil)
@@ -110,6 +118,9 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
+// Verify that the user exists and compares password hashes.
+// After three failed attempts, redirects to the "try later" page.
+// If the login is successful, redirects to the "welcome" page.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
@@ -151,6 +162,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/welcome", http.StatusSeeOther)
 }
 
+// displays "Welcome" followed by the user's name
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err != nil {
@@ -160,10 +172,12 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "welcome.html", map[string]string{"Username": cookie.Value})
 }
 
+// displays "Try later"
 func TryLaterHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "try_later.html", nil)
 }
 
+// logs the user out and returns them to the home page
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",

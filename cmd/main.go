@@ -14,11 +14,14 @@ func main() {
 	h.Handler()
 }
 
+// loadEnv traverses a set of paths to find the .env file
+// It loads the .env file once it is found.
+// Fatal error on failure.
 func loadEnv() {
 	paths := []string{
-		"../configs/.env", // pour exécution depuis /cmd
-		"./configs/.env",  // utile si tu lances go run depuis la racine
-		".env",            // fallback racine projet
+		"../configs/.env", // for execution from /cmd
+		"./configs/.env",  // useful if go run launched from root
+		".env",            // fallback root project
 	}
 
 	for _, path := range paths {

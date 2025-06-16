@@ -1,4 +1,4 @@
-name: SonarQube + Owaps ZAP
+name: Owaps ZAP
 on:
   push:
     branches: [main]
@@ -27,20 +27,34 @@ jobs:
     # ✅ 4. Start the Go web server
     - name: Start Go Web Server
       run: |
-        nohup ./app &
-        sleep 10
+        chmod +x launchDB.sh
+        sudo ./launchDB.sh
+        sleep 20
+
+        chmod +x app/app
+        nohup ./app/app &
+        echo "⏳ Waiting for server to be ready..."
+        for i in {1..30}; do
+          curl -s http://localhost:8080 >/dev/null && echo "✅ Server is up!" && exit 0
+          sleep 2
+        done
+        echo "❌ Server did not respond in time"
+        exit 1
+
 
     # ✅ 5. OWASP ZAP scan with fail check
     - name: Run ZAP Scan + Fail on risk
       run: |
+        docker pull ghcr.io/zaproxy/zaproxy:stable
         docker run --network="host" \
-          -v $(pwd):/zap/wrk/:rw \
-          owasp/zap2docker-stable zap-baseline.py \
-          -t http://localhost:8080 \
-          -r zap-report.html \
-          -x zap-report.xml \
-          -J zap-report.json \
-          -d
+          -v ${{ github.workspace }}:/zap/wrk:rw \
+          -t ghcr.io/zaproxy/zaproxy:stable \
+          zap-baseline.py \
+            -t http://localhost:8080 \
+            -r zap-report.html \
+            -x zap-report.xml \
+            -J zap-report.json \
+            -d
 
         echo "🔎 Analyzing ZAP output..."
         HIGH=$(jq '[.site[].alerts[] | select(.riskcode=="3")] | length' zap-report.json)

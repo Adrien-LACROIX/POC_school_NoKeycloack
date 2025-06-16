@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Lancement de Docker Desktop..."
-cd ../deployments
+cd ./deployments
 # Docker Desktop sur Ubuntu se lance généralement via cette commande
 systemctl --user start docker-desktop
 sleep 15
@@ -11,3 +11,4 @@ docker compose down -v
 
 echo "Reconstruction et démarrage des conteneurs..."
 docker compose up --build -d
+cd ..

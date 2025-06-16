@@ -23,7 +23,7 @@ jobs:
     - name: Build Go app
       run: |
         make clean
-        make
+        make build_test
 
     # ✅ 4. Start the Go web server
     - name: Start Go Web Server
@@ -32,8 +32,8 @@ jobs:
         sudo ./script/launchDB.sh
         sleep 20
 
-        chmod +x build/linux/amd64/POC_app-amd64
-        nohup ./build/linux/amd64/POC_app-amd64 &
+        chmod +x build/test/POC_app-test
+        nohup ./build/test/POC_app-test &
         echo "⏳ Waiting for server to be ready..."
         for i in {1..30}; do
           curl -s http://localhost:8080 >/dev/null && echo "✅ Server is up!" && exit 0

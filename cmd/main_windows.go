@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func launchDB() error {
+func LaunchDB() error {
 	cmd := exec.Command("powershell", "-ExecutionPolicy", "Bypass", "-File", "../script/launchDB.ps1")
 	output, err := cmd.CombinedOutput()
 	if err != nil {

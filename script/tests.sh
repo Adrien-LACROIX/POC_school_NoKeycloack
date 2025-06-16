@@ -44,7 +44,7 @@ systemctl start docker
 echo "Ajout de l'utilisateur actuel au groupe docker (nécessite une reconnexion)..."
 usermod -aG docker "$USER"
 
-cd ../deployments
+cd ./deployments
 echo "🛑 Arrêt et suppression des conteneurs + volumes..."
 docker compose down -v
 

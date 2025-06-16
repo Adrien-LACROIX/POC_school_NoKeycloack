@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func launchDB() error {
+func LaunchDB() error {
 	cmd := exec.Command("bash", "../script/launchDB.sh")
 	output, err := cmd.CombinedOutput()
 	if err != nil {

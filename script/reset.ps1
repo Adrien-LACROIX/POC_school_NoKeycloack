@@ -2,7 +2,7 @@ Write-Host "Lancement de Docker Desktop..."
 Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 Start-Sleep -Seconds 15
 
-cd ../deployments
+cd ./deployments
 Write-Host "Arrêt et suppression des conteneurs + volumes..."
 docker-compose down -v
 

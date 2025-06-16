@@ -17,8 +17,21 @@ var (
 	tryCount = make(map[string]int)
 )
 
-func Handler(dtb *sql.DB) {
-	db = dtb
+func Handler() {
+	var err error
+
+	connStr := "host=localhost port=5432 user=postgres password=mypwd dbname=myappdb sslmode=disable"
+	db, err = sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	tmpl = template.Must(template.ParseGlob("../web/templates/*.html"))
 
 	http.Handle("/static/", http.StripPrefix("../web/static/", http.FileServer(http.Dir("static"))))

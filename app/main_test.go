@@ -103,9 +103,13 @@ func TestLogout(t *testing.T) {
 	ts.URL = "http://localhost:8080"
 
 	client := &http.Client{}
-	resp, err := login(ts)
+	_, err := login(ts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	req, _ := http.NewRequest("GET", ts.URL+"/logout", nil)
-	resp, err = client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		t.Fatal(err)
 	}

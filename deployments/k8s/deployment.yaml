@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocnokc
+  namespace: pocnokc
+  labels:
+    app: pocnokc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pocnokc
+  template:
+    metadata:
+      labels:
+        app: pocnokc
+    spec:
+      containers:
+        - name: pocnokc
+          image: cornbald/pocnokc:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: pocnokc-config
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pocnokc-secret
+                  key: API_KEY
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pocnokc-secret
+                  key: DB_PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

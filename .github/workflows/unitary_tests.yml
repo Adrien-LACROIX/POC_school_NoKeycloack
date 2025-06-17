@@ -20,15 +20,15 @@ jobs:
 
       - name: ❓ Vérifier si le script existe
         run: |
-          if [ ! -f ./script/tests.sh ]; then
-            echo "❌ Le fichier ./script/tests.sh est introuvable !"
+          if [ ! -f ./script/tests/launch_tests.sh ]; then
+            echo "❌ Le fichier ./script/tests/launch_tests.sh est introuvable !"
             exit 1
           else
             echo "✅ Fichier trouvé !"
           fi
 
       - name: 🔐 Rendre exécutable
-        run: chmod +x ./script/tests.sh
+        run: chmod +x ./script/tests/launch_tests.sh
 
       - name: ▶️ Exécuter le script
-        run: sudo ./script/tests.sh
+        run: sudo ./script/tests/launch_tests.sh

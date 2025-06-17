@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pocnokc
+  namespace: pocnokc
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: pocnokc
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - pocnokc

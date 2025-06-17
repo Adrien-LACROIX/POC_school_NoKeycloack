@@ -28,8 +28,8 @@ jobs:
     # ✅ 4. Start the Go web server
     - name: Start Go Web Server
       run: |
-        chmod +x script/launchDB.sh
-        sudo ./script/launchDB.sh
+        chmod +x script/db/launch_db.sh
+        sudo ./script/db/launch_db.sh
         sleep 20
 
         chmod +x build/test/POC_app-test

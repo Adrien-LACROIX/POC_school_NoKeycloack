@@ -7,32 +7,32 @@ ENTRY := ./cmd/main.go
 default: build-all
 
 build-all :
-	build_windows build_linux_amd64 build_linux_arm64
+	build-windows build-linux-amd64 build-linux-arm64
 	@echo "🚀 Tous les builds terminés avec succès !"
 
 build-linux :
-	build_linux_amd64 build_linux_arm64
+	build-linux-amd64 build-linux-arm64
 	@echo "🚀 Tous les builds linux terminés avec succès !"
 
-build_windows:
+build-windows:
 	@echo "📦 Compilation de $(APP_NAME)..."
 	@mkdir -p $(BUILD_DIR)/windows
 	GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/windows/$(APP_NAME) $(ENTRY)
 	@echo "✅ Binaire créé : $(BUILD_DIR)/windows/$(APP_NAME)"
 
-build_linux_amd64:
+build-linux-amd64:
 	@echo "📦 Compilation de $(APP_NAME)..."
 	@mkdir -p $(BUILD_DIR)/linux/amd64
 	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/linux/amd64/$(APP_NAME)-amd64 $(ENTRY)
 	@echo "✅ Binaire créé : $(BUILD_DIR)/linux/amd64/$(APP_NAME)-amd64"
 
-build_linux_arm64:
+build-linux-arm64:
 	@echo "📦 Compilation de $(APP_NAME)..."
 	@mkdir -p $(BUILD_DIR)/linux/arm64
 	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/linux/arm64/$(APP_NAME)-arm64 $(ENTRY)
 	@echo "✅ Binaire créé : $(BUILD_DIR)/linux/arm64/$(APP_NAME)-arm64"
 
-build_test :
+build-test :
 	@echo "📦 Compilation de $(APP_NAME)..."
 	@mkdir -p $(BUILD_DIR)/test
 	@go build -o $(BUILD_DIR)/test/$(APP_NAME)-test $(ENTRY)

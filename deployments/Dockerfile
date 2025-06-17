@@ -1,9 +1,23 @@
-FROM golang:1.21
+# Étape 1 : builder via Makefile
+FROM golang:1.23-alpine AS builder
 
+WORKDIR /pocnokc
+
+# Copie des sources et du Makefile
 COPY . .
 
-RUN go mod tidy
+# Build via Makefile
+RUN apk add --no-cache make && \
+    make build-linux-amd64
+
+# Étape 2 : image minimale
+FROM alpine:latest
+
+WORKDIR /root/
+
+# Copier le binaire depuis l'étape de build
+COPY --from=builder /pocnokc/build/linux/amd64/POC_app-amd64 .
 
 EXPOSE 8080
 
-CMD ["go", "run", "cmd/main.go"]
+CMD ["./POC_app-amd64"]

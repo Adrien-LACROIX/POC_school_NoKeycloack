@@ -23,7 +23,7 @@ jobs:
     - name: Build Go app
       run: |
         make clean
-        make build_test
+        make build-test
 
     # ✅ 4. Start the Go web server
     - name: Start Go Web Server

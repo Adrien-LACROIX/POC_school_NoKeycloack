@@ -1,4 +1,4 @@
-# Étape 1 : builder via Makefile
+# Étape 1 : builder via Makefile 
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /pocnokc
@@ -13,10 +13,18 @@ RUN apk add --no-cache make && \
 # Étape 2 : image minimale
 FROM alpine:latest
 
-WORKDIR /root/
+# Création d'un utilisateur non-root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /home/appuser
 
 # Copier le binaire depuis l'étape de build
 COPY --from=builder /pocnokc/build/linux/amd64/POC_app-amd64 .
+
+# Donner les droits à l'utilisateur
+RUN chown appuser:appgroup ./POC_app-amd64
+
+USER appuser
 
 EXPOSE 8080
 
